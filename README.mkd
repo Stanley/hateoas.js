@@ -1,0 +1,85 @@
+HATEOAS.js
+==========
+
+HATEOAS, an abbreviation for Hypermedia as the Engine of Application State.
+HATEOAS.js is a small library for working with hypermedia APIs.
+
+Testing
+-------
+
+[Jasmine-node](https://github.com/mhevery/jasmine-node) package is required
+(`# npm install jasmine-node -g`).
+
+    $ jasmine-node
+
+Using
+-----
+
+```javascript
+// Initializing object will connect to the given server and for each
+// element witin `collection.links` array create mathod named however link's
+// `rel` is named.
+new Hateoas({base: 'http://example.com/'}, function(err){
+
+  // GET all books
+  this.books(function(err, books) {
+    // ...
+  })
+
+  // GET a book with id=42
+  this.books(42, function(err, book) {
+    // ...
+  })
+
+  // create new book
+  // if the argument is an object, it will be send in a POST request
+  this.books({name: '', author: ''}, function(err, ok){
+    // callback
+  })
+})
+```
+
+Enable lazy loading
+
+```javascript
+new Hateoas({base: 'http://example.com/', explore: true}, function(err){
+
+  // If you don't pass callback request won't be fired
+  var book = this.books(101) // returns object with methods
+
+  book.author().books(101, function(err, book){
+    // preforms only one request
+  })
+
+  book.author(function(err, author){
+    // performs two requests; returns book's author object
+  })
+
+  Hateoas.get(book, cb) // GETs `book` 
+  Hateoas.put(book, new_attributes, cb) // UPDATEs `book`
+  Hateoas.del(book, cb) // DELETEs `book`
+})
+```
+
+License
+-------
+
+Copyright (C) 2012 apivision.com
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
