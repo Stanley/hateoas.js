@@ -51,7 +51,7 @@ describe('HATEOAS.js basics', function(){
       })))
 
       var result
-      api.books(function(books){
+      api.books(function(err, books){
         result = books
       })
       
@@ -80,7 +80,7 @@ describe('HATEOAS.js basics', function(){
       })))
 
       var result
-      api.books('tfotr', function(book){
+      api.books('tfotr', function(err, book){
         result = book
       })
       
@@ -113,8 +113,8 @@ describe('HATEOAS.js basics', function(){
       })))
 
       var result
-      api.books('ttt', function(book){
-        book.author(function(author){
+      api.books('ttt', function(err, book){
+        book.author(function(err, author){
           result = author
         })
       })
@@ -125,6 +125,36 @@ describe('HATEOAS.js basics', function(){
           {id: 'jrrt', name: 'J. R. R. Tolkien'}
         ])
       })
+    })
+
+    it('should create items', function(){
+
+      server.once('/books', function(req, res){
+        expect(req.method).toBe('POST')
+        Server.response(JSON.stringify({collection: {}}), 201).call(server, req, res)
+      })
+
+      var ok
+      api.books({template: {data: []}}, function(err){
+        ok = !err
+      })
+
+      waitsFor(function(){ return ok }, 'server response', 100)
+    })
+
+    it('should update items', function(){
+
+      server.once('/books/trotk', function(req, res){
+        expect(req.method).toBe('PUT')
+        Server.response(JSON.stringify({collection: {}}), 201).call(server, req, res)
+      })
+
+      var ok
+      api.books('trotk', {template: {data: []}}, function(err){
+        ok = !err
+      })
+
+      waitsFor(function(){ return ok }, 'server response', 100)
     })
   })
 })
