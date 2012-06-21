@@ -27,27 +27,28 @@ new Hateoas({base: 'http://example.com/'}, function(err){
   })
 
   // GET a book with id=42
-  this.books(42, function(err, book) {
+  this.books('42', function(err, book) {
     // ...
   })
 
-  // create new book
+  // POST (create) new book
   // if the argument is an object, it will be send in a POST request
-  this.books({name: '', author: ''}, function(err, ok){
+  this.books({name: 'Crime and Punishment', author: 'Fyodor Dostoyevsky'}, function(err, ok){
     // callback
   })
 })
 ```
 
+*TODO*
 Enable lazy loading
 
 ```javascript
 new Hateoas({base: 'http://example.com/', explore: true}, function(err){
 
   // If you don't pass callback request won't be fired
-  var book = this.books(101) // returns object with methods
+  var book = this.books('101') // returns object with methods
 
-  book.author().books(101, function(err, book){
+  book.author().books('101', function(err, book){
     // preforms only one request
   })
 
