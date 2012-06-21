@@ -131,6 +131,7 @@ describe('HATEOAS.js basics', function(){
 
       server.once('/books', function(req, res){
         expect(req.method).toBe('POST')
+        expect(req.headers['content-length']).toBeGreaterThan(0)
         Server.response(JSON.stringify({collection: {}}), 201).call(server, req, res)
       })
 
@@ -146,6 +147,7 @@ describe('HATEOAS.js basics', function(){
 
       server.once('/books/trotk', function(req, res){
         expect(req.method).toBe('PUT')
+        expect(req.headers['content-length']).toBeGreaterThan(0)
         Server.response(JSON.stringify({collection: {}}), 201).call(server, req, res)
       })
 
